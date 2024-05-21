@@ -44,15 +44,17 @@ class Server:
         idx_rage = index_range(page, page_size)
         data = self.dataset()
         return data[idx_rage[0]:idx_rage[1]]
-    
+
     def get_hyper(self, page: int = 1, page_size: int = 10) -> dict:
+        """A documentation for my function."""
         data = self.get_page(page, page_size)
         dataset = self.dataset()
         rtn_dict = {
             "page_size": len(data),
             "page": page,
             "data": data,
-            "next_page": page + 1 if page < (len(dataset) / page_size) else None,
+            "next_page": page + 1 if page < (len(dataset) / page_size)
+            else None,
             "prev_page": page - 1 if page > 1 else None,
             "total_pages": math.ceil(len(dataset) / page_size)
         }
