@@ -7,6 +7,7 @@ class LRUCache(BaseCaching):
     """This is my class documentation"""
 
     def __init__(self):
+        """My __init__ function"""
         super().__init__()
         self.usecount = {}
 
@@ -15,22 +16,19 @@ class LRUCache(BaseCaching):
         if key is None or item is None:
             return
         self.cache_data[key] = item
-        self.usecount[key] = 0
-        if len(self.cache_data) > self.MAX_ITEMS:
-            leastRecentlyUsed = list(self.usecount)[0]
-            for key in self.usecount.keys():
-                if self.usecount[key] < self.usecount[leastRecentlyUsed]:
-                    leastRecentlyUsed = key
-            print(f"DISCARD: {leastRecentlyUsed}")
-            self.cache_data.pop(leastRecentlyUsed)
-            self.usecount.pop(leastRecentlyUsed)
-            for key in self.usecount.keys():
-                self.usecount[key] = 0
-
+        if len(self.usecount) == 0:
+            self.usecount[key] = 0
+        else:
+            self.usecount[key] = max(self.usecount.values()) + 1
+        if len(self.cache_data) > BaseCaching.MAX_ITEMS:
+            delkey = min(self.usecount, key=self.usecount.get)
+            print(f"DISCARD: {delkey}")
+            self.usecount.pop(delkey)
+            self.cache_data.pop(delkey)
 
     def get(self, key):
         """This is my function documentation"""
         if key is None or key not in self.cache_data:
             return None
-        self.usecount[key] += 1
+        self.usecount[key] = max(self.usecount.values()) + 1
         return self.cache_data[key]
